@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EcoControl Tacna | Dashboard MVP</title>
+<style>
+:root{--bg:#f4f7f5;--card:#fff;--text:#17382b;--muted:#6c8178;--green:#126b4b;--green2:#27a46d;--lime:#a9e77c;--line:#e0eae5;--red:#d95c5c;--amber:#e2a62b;--shadow:0 10px 30px #17382b12}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);font-family:Inter,Arial,sans-serif;color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{display:flex;min-height:100vh}.side{width:255px;background:#0b3328;color:#dff2e8;position:fixed;inset:0 auto 0 0;padding:24px 16px;z-index:20;overflow:auto}.brand{font-size:23px;font-weight:800;padding:8px 12px 24px}.brand b{color:var(--lime)}.brand small{display:block;font-size:11px;color:#94b8a9;margin-top:6px;font-weight:500}
+.menu-title{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:#7fa899;margin:18px 12px 8px}.nav{display:grid;gap:5px}.nav button{background:transparent;border:0;color:#cfe8dd;text-align:left;padding:12px;border-radius:10px;font-weight:600}.nav button:hover,.nav button.active{background:#1b5d48;color:white}.nav button span{display:inline-block;width:27px;color:#8fcea9}
+.userbox{margin-top:25px;background:#123f32;border:1px solid #2b624f;border-radius:13px;padding:13px;font-size:12px}.dot{display:inline-block;width:8px;height:8px;background:#68d391;border-radius:50%;margin-right:7px}
+.main{margin-left:255px;width:calc(100% - 255px);padding:25px 30px 50px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.top h1{margin:0;font-size:25px}.top p{margin:5px 0 0;color:var(--muted);font-size:13px}.actions{display:flex;gap:8px}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--green);color:#fff;font-weight:700}.btn:hover{filter:brightness(.93)}.btn.light{background:#e8f2ed;color:#18583f}.btn.danger{background:#fbe9e9;color:#a33c3c}.btn.small{padding:7px 10px;font-size:12px}
+.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(135deg,#0c382b,#177454);color:#fff;border-radius:20px;padding:27px;margin-bottom:18px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:260px;height:260px;border:35px solid #ffffff12;border-radius:50%;right:-90px;top:-100px}.hero h2{font-size:29px;margin:0 0 7px}.hero p{max-width:720px;color:#d8eee5;line-height:1.55}.pill{display:inline-block;background:#d8f5c9;color:#18512f;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
+.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:var(--shadow)}.card h3{margin:0 0 13px;font-size:16px}.muted{color:var(--muted);font-size:12px}
+.kpi{padding:18px;background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}.kpi .ico{float:right;background:#e5f5eb;padding:9px;border-radius:10px}.kpi strong{display:block;font-size:28px;margin:13px 0 4px}.kpi small{color:var(--muted)}.up{color:#228c5a;font-size:12px;font-weight:700}
+.section-title{display:flex;justify-content:space-between;align-items:end;margin:25px 0 12px}.section-title h2{margin:0;font-size:20px}.section-title span{font-size:12px;color:var(--muted)}
+.chartbox{min-height:270px}.bars{display:flex;align-items:end;height:210px;gap:14px;padding:15px 8px 0;border-bottom:1px solid var(--line)}.barcol{flex:1;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:end;gap:6px}.barfill{width:70%;max-width:55px;margin:auto;background:linear-gradient(#42b57d,#19704f);border-radius:7px 7px 0 0;min-height:3px}.barval{font-size:11px;font-weight:800}.barlabel{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress{height:10px;background:#e7efeb;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:var(--green2);border-radius:20px}.legend{display:flex;justify-content:space-between;font-size:12px;margin:7px 0}
+table{width:100%;border-collapse:collapse}th,td{padding:11px 9px;border-bottom:1px solid var(--line);font-size:12px;text-align:left}th{font-size:11px;text-transform:uppercase;color:#668078;background:#f7faf8}.tablewrap{overflow:auto}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}label{display:block;font-size:11px;font-weight:800;margin-bottom:5px;color:#45645a}input,select,textarea{width:100%;border:1px solid #cddbd4;border-radius:9px;padding:10px;background:#fff;color:var(--text)}textarea{min-height:78px}.full{grid-column:1/-1}.form-actions{display:flex;gap:8px;margin-top:13px}
+.alert{padding:12px;border-radius:10px;background:#edf8f0;border-left:4px solid var(--green2);font-size:12px;margin-top:12px}.warn{background:#fff7df;border-left-color:var(--amber)}
+.tag{padding:4px 7px;border-radius:20px;background:#e8f4ed;color:#176047;font-weight:700;font-size:10px}.tag.red{background:#fbeaea;color:#a04040}
+.timeline{display:grid;gap:12px}.event{display:flex;gap:12px}.event b{font-size:12px}.event p{margin:3px 0;color:var(--muted);font-size:12px}.circle{min-width:27px;height:27px;border-radius:50%;background:#dff3e7;color:#146145;text-align:center;padding-top:6px;font-weight:800}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+@media(max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.side{width:70px;padding:15px 8px}.brand{font-size:0;text-align:center}.brand b{font-size:20px}.brand small,.menu-title,.nav button span,.nav button{font-size:0}.nav button{text-align:center}.nav button:after{content:"●";font-size:13px}.userbox{display:none}.main{margin-left:70px;width:calc(100% - 70px);padding:18px}.top{display:block}.actions{margin-top:12px}.g4,.g2{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.hero h2{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+<div class="brand">EcoControl <b>Tacna</b><small>MVP · Gestión del desperdicio</small></div>
+<div class="menu-title">Principal</div>
+<div class="nav">
+<button data-page="dashboard" class="active"><span>⌂</span>Dashboard</button>
+<button data-page="registro"><span>＋</span>Registrar desperdicio</button>
+<button data-page="indicadores"><span>▥</span>Indicadores</button>
+<button data-page="historial"><span>☷</span>Historial</button>
+<button data-page="analisis"><span>◈</span>Análisis</button>
+</div>
+<div class="menu-title">Proyecto</div>
+<div class="nav">
+<button data-page="mvp"><span>◇</span>MVP y validación</button>
+<button data-page="validacion"><span>✓</span>Resultados de validación</button>
+<button data-page="mejora"><span>↗</span>Aprendizaje y mejora</button>
+</div>
+<div class="userbox"><span class="dot"></span>MVP operativo<br><small>Datos de demostración cargados</small></div>
+</aside>
+
+<main class="main">
+<div class="top">
+<div><h1 id="pageTitle">Dashboard</h1><p id="pageSub">Vista general del sistema y sus principales indicadores.</p></div>
+<div class="actions"><button class="btn light" onclick="exportCSV()">↓ Exportar CSV</button><button class="btn" onclick="go('registro')">＋ Nuevo registro</button></div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="page active">
+<div class="hero"><span class="pill">MVP · VERSIÓN 1.0</span><h2>Control de desperdicios, con datos para decidir.</h2><p>EcoControl Tacna transforma el registro de desperdicios en información visual para identificar dónde se generan, por qué ocurren y qué oportunidades de mejora pueden priorizarse.</p></div>
+<div class="grid g4">
+<div class="kpi"><span class="ico">⚖</span><small>Total registrado</small><strong id="kTotal">32.3 kg</strong><span class="up">12 registros base</span></div>
+<div class="kpi"><span class="ico">⌖</span><small>Área crítica</small><strong>Cocina</strong><span class="up">17.3 kg · 53.6%</span></div>
+<div class="kpi"><span class="ico">!</span><small>Causa principal</small><strong>15.4 kg</strong><span class="up">Preparación excesiva</span></div>
+<div class="kpi"><span class="ico">✓</span><small>Utilidad MVP</small><strong>100%</strong><span class="up">10/10 participantes</span></div>
+</div>
+<div class="section-title"><h2>Resumen operativo</h2><span>Datos cargados para la demostración del MVP</span></div>
+<div class="grid g2">
+<div class="card chartbox"><h3>Desperdicio por área</h3><div id="areaChart" class="bars"></div></div>
+<div class="card"><h3>Indicadores de validación</h3><div id="validationMini"></div></div>
+</div>
+<div class="section-title"><h2>Lectura rápida</h2></div>
+<div class="grid g3">
+<div class="card"><h3>⚠ Punto de atención</h3><p class="muted">Cocina concentra la mayor cantidad de desperdicio registrada en el conjunto de demostración.</p></div>
+<div class="card"><h3>🎯 Oportunidad</h3><p class="muted">La preparación excesiva es la causa con mayor peso y puede orientar acciones preventivas.</p></div>
+<div class="card"><h3>💡 Siguiente paso</h3><p class="muted">Agregar filtros por periodo, área y causa para facilitar el análisis operativo.</p></div>
+</div>
+</div>
+
+<!-- REGISTRO -->
+<div id="registro" class="page">
+<div class="card"><h3>Nuevo registro de desperdicio</h3><p class="muted">Ingresa los datos observados durante la operación. El registro se incorpora al historial de esta demostración.</p>
+<form id="regForm">
+<div class="formgrid">
+<div><label>Fecha *</label><input id="fFecha" type="date" required></div>
+<div><label>Área *</label><select id="fArea" required><option value="">Seleccionar</option><option>Cocina</option><option>Preproducción</option><option>Servicio</option><option>Almacén</option><option>Comedor</option></select></div>
+<div><label>Tipo de alimento *</label><select id="fAlimento" required><option value="">Seleccionar</option><option>Preparaciones cocidas</option><option>Frutas y verduras</option><option>Carnes</option><option>Lácteos</option><option>Granos y cereales</option></select></div>
+<div><label>Cantidad (kg) *</label><input id="fKg" type="number" min=".1" step=".1" required></div>
+<div><label>Causa *</label><select id="fCausa" required><option value="">Seleccionar</option><option>Preparación excesiva</option><option>Daño o deterioro</option><option>Error de preparación</option><option>Sobras del cliente</option><option>Vencimiento</option></select></div>
+<div><label>Observación</label><input id="fObs" placeholder="Detalle del desperdicio"></div>
+</div><div class="form-actions"><button class="btn" type="submit">Guardar registro</button><button class="btn light" type="reset">Limpiar</button></div>
+</form><div id="saveMsg" class="alert" style="display:none">✓ Registro guardado correctamente. El dashboard e historial fueron actualizados.</div></div>
+<div class="card"><h3>Campos del sistema</h3><div class="grid g3"><div><b>Medición</b><p class="muted">Cantidad en kg.</p></div><div><b>Clasificación</b><p class="muted">Área y causa de generación.</p></div><div><b>Seguimiento</b><p class="muted">Fecha y observación para analizar patrones.</p></div></div></div>
+</div>
+
+<!-- INDICADORES -->
+<div id="indicadores" class="page">
+<div class="grid g4"><div class="kpi"><small>Total</small><strong id="iTotal">32.3 kg</strong></div><div class="kpi"><small>Promedio</small><strong id="iAvg">2.69 kg</strong></div><div class="kpi"><small>Mayor área</small><strong>Cocina</strong></div><div class="kpi"><small>Mayor causa</small><strong>15.4 kg</strong></div></div>
+<div class="section-title"><h2>Panel de indicadores</h2><span>Lectura por área y causa</span></div>
+<div class="grid g2"><div class="card"><h3>Distribución por área</h3><div id="areaDetail"></div></div><div class="card"><h3>Distribución por causa</h3><div id="causeDetail"></div></div></div>
+<div class="card" style="margin-top:16px"><h3>Evolución durante el período</h3><p class="muted">Seguimiento de los registros de septiembre de 2026 para observar variaciones entre fechas.</p><div id="timeChart" class="bars"></div></div>
+<div class="card" style="margin-top:16px"><h3>Interpretación</h3><div class="alert warn">La información permite identificar el punto de mayor generación y priorizar acciones. En esta versión, el foco inicial está en Cocina y preparación excesiva.</div></div>
+</div>
+
+<!-- HISTORIAL -->
+<div id="historial" class="page">
+<div class="card"><div class="section-title" style="margin-top:0"><h2>Historial de desperdicios</h2><span id="recordCount">12 registros</span></div>
+<div class="grid g3" style="margin-bottom:14px"><input id="filterText" placeholder="Buscar alimento, área o causa..." oninput="renderTable()"><select id="filterArea" onchange="renderTable()"><option value="">Todas las áreas</option><option>Cocina</option><option>Preproducción</option><option>Servicio</option><option>Almacén</option><option>Comedor</option></select><select id="filterCause" onchange="renderTable()"><option value="">Todas las causas</option><option>Preparación excesiva</option><option>Daño o deterioro</option><option>Error de preparación</option><option>Sobras del cliente</option><option>Vencimiento</option></select><select id="filterFood" onchange="renderTable()"><option value="">Todos los alimentos</option><option>Preparaciones cocidas</option><option>Frutas y verduras</option><option>Carnes</option><option>Lácteos</option><option>Granos y cereales</option></select></div>
+<div class="tablewrap"><table><thead><tr><th>Fecha</th><th>Área</th><th>Alimento</th><th>Kg</th><th>Causa</th><th>Observación</th><th>Acción</th></tr></thead><tbody id="tableBody"></tbody></table></div></div>
+</div>
+
+<!-- ANALISIS -->
+<div id="analisis" class="page">
+<div class="hero"><span class="pill">ANÁLISIS OPERATIVO</span><h2>¿Dónde y por qué se genera el desperdicio?</h2><p>Este módulo convierte los registros en una lectura operativa para identificar prioridades de intervención.</p></div>
+<div class="grid g3">
+<div class="card"><h3>📍 Área crítica</h3><strong style="font-size:28px">Cocina</strong><p class="muted">17.3 kg · 53.6% del total de demostración.</p><div class="progress"><i style="width:53.6%"></i></div></div>
+<div class="card"><h3>⚠ Causa crítica</h3><strong style="font-size:28px">15.4 kg</strong><p class="muted">Preparación excesiva.</p><div class="progress"><i style="width:47.7%"></i></div></div>
+<div class="card"><h3>🎯 Prioridad</h3><p class="muted">Revisar planificación y cantidades preparadas en Cocina.</p><span class="tag">Prioridad alta</span></div>
+</div>
+<div class="grid g2" style="margin-top:16px">
+<div class="card"><h3>Principales hallazgos</h3><div class="timeline"><div class="event"><div class="circle">1</div><div><b>Cocina concentra la mayor generación.</b><p>Es el principal punto para revisar prácticas operativas.</p></div></div><div class="event"><div class="circle">2</div><div><b>Preparación excesiva es la causa predominante.</b><p>Representa la mayor oportunidad de reducción.</p></div></div><div class="event"><div class="circle">3</div><div><b>El historial permite seguimiento.</b><p>Los registros pueden compararse por fecha, área y causa.</p></div></div></div></div>
+<div class="card"><h3>Indicadores disponibles</h3><div id="analysisProgress"></div></div>
+</div></div>
+
+<!-- MVP -->
+<div id="mvp" class="page">
+<div class="hero"><span class="pill">PUNTO 4</span><h2>MVP y validación</h2><p>Primera versión navegable para comprobar si el registro, clasificación y visualización de indicadores resultan comprensibles y útiles.</p></div>
+<div class="grid g2">
+<div class="card"><h3>4.1 Diseño del MVP</h3><p class="muted">Página web con módulos de registro, indicadores, historial, validación y aprendizaje.</p></div>
+<div class="card"><h3>4.2 Funcionalidades</h3><p class="muted">Registro digital · clasificación por área y causa · indicadores · historial · resultados de validación.</p></div>
+<div class="card"><h3>4.3 Qué se probará</h3><p class="muted">Facilidad de registro, claridad de categorías, comprensión de indicadores, navegación, utilidad e identificación de área y causa.</p></div>
+<div class="card"><h3>4.4 Usuarios</h3><p class="muted">Administradores, responsables de cocina y personal vinculado a inventario u operaciones.</p></div>
+<div class="card"><h3>4.5 Método</h3><p class="muted">Prueba exploratoria de usabilidad mediante tareas concretas y formulario de evaluación.</p></div>
+<div class="card"><h3>4.6 Evidencias</h3><p class="muted">Prototipo navegable, registros, indicadores y resultados de la evaluación incorporados en esta versión.</p></div>
+</div>
+</div>
+
+<!-- VALIDACION -->
+<div id="validacion" class="page">
+<div class="grid g4"><div class="kpi"><small>Participantes</small><strong>10</strong></div><div class="kpi"><small>Utilidad</small><strong>100%</strong></div><div class="kpi"><small>Navegación</small><strong>90%</strong></div><div class="kpi"><small>Clasificación</small><strong>80%</strong></div></div>
+<div class="section-title"><h2>Resultados de la prueba exploratoria</h2><span>n = 10</span></div>
+<div class="grid g2"><div class="card"><h3>Resultados por criterio</h3><div id="valBars"></div></div><div class="card"><h3>Lectura de resultados</h3><div class="timeline">
+<div class="event"><div class="circle">1</div><div><b>Fortaleza</b><p>10 de 10 participantes consideraron útil el MVP.</p></div></div>
+<div class="event"><div class="circle">2</div><div><b>Facilidad</b><p>9 de 10 valoraron favorablemente el registro y la navegación.</p></div></div>
+<div class="event"><div class="circle">3</div><div><b>Oportunidad</b><p>8 de 10 comprendieron clasificación y gráficos; son puntos a mejorar.</p></div></div>
+</div></div></div>
+<div class="card" style="margin-top:16px"><h3>Detalle de participantes</h3><div class="tablewrap"><table><thead><tr><th>Participante</th><th>Perfil</th><th>Registro</th><th>Clasificación</th><th>Indicadores</th><th>Utilidad</th></tr></thead><tbody id="participants"></tbody></table></div></div>
+</div>
+
+<!-- MEJORA -->
+<div id="mejora" class="page">
+<div class="hero"><span class="pill">PUNTO 5</span><h2>Aprendizaje y mejora</h2><p>Los resultados de la prueba orientan los cambios de la siguiente versión del MVP.</p></div>
+<div class="grid g2">
+<div class="card"><h3>5.1 Resultados</h3><p class="muted">Facilidad de registro 90%, clasificación 80%, indicadores 90%, gráficos 80%, navegación 90%, utilidad 100%, identificación del área 90% e identificación de la causa 80%.</p></div>
+<div class="card"><h3>5.2 Aprendizajes</h3><p class="muted">El registro es comprendido por la mayoría. Las categorías y gráficos requieren una presentación más clara para facilitar la interpretación.</p></div>
+<div class="card"><h3>5.3 Mejoras propuestas</h3><ul class="muted"><li>Simplificar y reorganizar categorías.</li><li>Mejorar etiquetas y presentación de gráficos.</li><li>Agregar filtros por periodo, área y causa.</li><li>Mantener navegación directa.</li></ul></div>
+<div class="card"><h3>5.4 Probar → Medir → Aprender → Mejorar</h3><div class="progress"><i style="width:100%"></i></div><p class="muted">El aprendizaje obtenido se utiliza como entrada para una nueva iteración del MVP.</p></div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+const baseRecords=[
+["2026-09-01","Cocina","Preparaciones cocidas",4.2,"Preparación excesiva","Excedente de preparación"],
+["2026-09-02","Preproducción","Frutas y verduras",2.4,"Daño o deterioro","Productos deteriorados"],
+["2026-09-03","Cocina","Carnes",3.1,"Error de preparación","Preparación no utilizada"],
+["2026-09-05","Servicio","Preparaciones cocidas",2.2,"Sobras del cliente","Devoluciones de platos"],
+["2026-09-06","Cocina","Frutas y verduras",3.7,"Preparación excesiva","Excedente"],
+["2026-09-08","Almacén","Lácteos",1.5,"Vencimiento","Producto fuera de fecha"],
+["2026-09-10","Cocina","Granos y cereales",4.0,"Preparación excesiva","Excedente de preparación"],
+["2026-09-11","Preproducción","Frutas y verduras",2.0,"Daño o deterioro","Producto deteriorado"],
+["2026-09-13","Servicio","Preparaciones cocidas",1.8,"Sobras del cliente","Sobras"],
+["2026-09-15","Cocina","Preparaciones cocidas",3.5,"Preparación excesiva","Excedente"],
+["2026-09-17","Comedor","Preparaciones cocidas",1.1,"Sobras del cliente","Sobras"],
+["2026-09-19","Cocina","Carnes",2.8,"Error de preparación","Preparación no utilizada"]
+];
+let records=JSON.parse(localStorage.getItem("ecoRecords")||"null")||baseRecords;
+const validation=[
+["P01","Administrador",90,90,100],["P02","Cocina",90,90,100],["P03","Cocina",90,90,100],["P04","Operaciones",90,90,100],["P05","Administrador",90,90,100],
+["P06","Cocina",90,90,100],["P07","Inventario",90,90,100],["P08","Operaciones",90,90,100],["P09","Cocina",90,90,100],["P10","Administrador",90,90,100]
+];
+const criteria=[["Facilidad de registro",90],["Clasificación",80],["Indicadores",90],["Gráficos",80],["Navegación",90],["Utilidad",100],["Identificación de área",90],["Identificación de causa",80]];
+const titles={dashboard:["Dashboard","Vista general del sistema y sus principales indicadores."],registro:["Registrar desperdicio","Ingresa y clasifica un nuevo registro operativo."],indicadores:["Indicadores","Visualiza cantidades y puntos críticos del desperdicio."],historial:["Historial","Consulta, filtra y elimina registros de la demostración."],analisis:["Análisis","Identificación de puntos y causas críticas."],mvp:["MVP y validación","Diseño, alcance, usuarios y método de prueba."],validacion:["Resultados de validación","Resultados de la prueba exploratoria del MVP."],mejora:["Aprendizaje y mejora","Hallazgos y mejoras propuestas para la siguiente iteración."]};
+
+function go(page){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ document.getElementById(page).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
+ document.getElementById("pageTitle").textContent=titles[page][0];document.getElementById("pageSub").textContent=titles[page][1];
+ window.scrollTo({top:0,behavior:"smooth"});renderAll();
+}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.page));
+
+function total(){return records.reduce((s,r)=>s+Number(r[3]),0)}
+function groups(index){
+ const o={};records.forEach(r=>o[r[index]]=(o[r[index]]||0)+Number(r[3]));return o
+}
+function renderBars(elId,data,max){
+ const el=document.getElementById(elId);if(!el)return;
+ el.innerHTML=Object.entries(data).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="barcol"><div class="barval">${v.toFixed(1)}</div><div class="barfill" style="height:${Math.max(3,v/max*160)}px"></div><div class="barlabel" title="${k}">${k}</div></div>`).join("");
+}
+function renderProgress(elId,data){
+ const el=document.getElementById(elId);if(!el)return;
+ el.innerHTML=data.map(([k,v])=>`<div class="legend"><span>${k}</span><b>${v}%</b></div><div class="progress"><i style="width:${v}%"></i></div>`).join("");
+}
+function renderTable(){
+ const body=document.getElementById("tableBody");if(!body)return;
+ const q=(document.getElementById("filterText").value||"").toLowerCase(),a=document.getElementById("filterArea").value,c=document.getElementById("filterCause").value,f=document.getElementById("filterFood").value;
+ const rows=records.filter(r=>(!q||r.join(" ").toLowerCase().includes(q))&&(!a||r[1]===a)&&(!c||r[4]===c)&&(!f||r[2]===f));
+ body.innerHTML=rows.map((r)=>`<tr><td>${r[0].split("-").reverse().join("/")}</td><td><span class="tag">${r[1]}</span></td><td>${r[2]}</td><td><b>${Number(r[3]).toFixed(1)}</b></td><td>${r[4]}</td><td>${r[5]}</td><td><button class="btn danger small" onclick="removeRecord('${r[0]}','${r[2]}')">Eliminar</button></td></tr>`).join("")||`<tr><td colspan="7" class="empty">No hay registros que coincidan con el filtro.</td></tr>`;
+ document.getElementById("recordCount").textContent=rows.length+" registros visibles";
+}
+function removeRecord(date,food){if(!confirm("¿Eliminar este registro?"))return;records=records.filter(r=>!(r[0]===date&&r[2]===food));localStorage.setItem("ecoRecords",JSON.stringify(records));renderAll();}
+function renderAll(){
+ const t=total(),avg=records.length?t/records.length:0;document.getElementById("kTotal").textContent=t.toFixed(1)+" kg";document.getElementById("iTotal").textContent=t.toFixed(1)+" kg";document.getElementById("iAvg").textContent=avg.toFixed(2)+" kg";
+ const areas=groups(1),causes=groups(4);renderBars("areaChart",areas,Math.max(...Object.values(areas),1));renderProgress("areaDetail",Object.entries(areas).sort((a,b)=>b[1]-a[1]).map(x=>[x[0],Math.round(x[1]/t*100)]));renderProgress("causeDetail",Object.entries(causes).sort((a,b)=>b[1]-a[1]).map(x=>[x[0],Math.round(x[1]/t*100)]));renderProgress("validationMini",criteria.slice(0,6));renderProgress("analysisProgress",Object.entries(causes).sort((a,b)=>b[1]-a[1]).map(x=>[x[0],Math.round(x[1]/t*100)]));
+ const byDate={};records.forEach(r=>{const d=r[0].slice(8,10);byDate[d]=(byDate[d]||0)+Number(r[3])});renderBars("timeChart",byDate,Math.max(...Object.values(byDate),1));
+ const vb=document.getElementById("valBars");if(vb)renderProgress("valBars",criteria);
+ renderTable();
+ const p=document.getElementById("participants");if(p)p.innerHTML=validation.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}%</td><td>80%</td><td>${x[3]}%</td><td>${x[4]}%</td></tr>`).join("");
+}
+document.getElementById("regForm").addEventListener("submit",e=>{
+ e.preventDefault();const r=[document.getElementById("fFecha").value,document.getElementById("fArea").value,document.getElementById("fAlimento").value,Number(document.getElementById("fKg").value),document.getElementById("fCausa").value,document.getElementById("fObs").value||"Registro ingresado"];
+ records.push(r);localStorage.setItem("ecoRecords",JSON.stringify(records));e.target.reset();document.getElementById("fFecha").value=new Date().toISOString().slice(0,10);document.getElementById("saveMsg").style.display="block";renderAll();
+});
+document.getElementById("fFecha").value=new Date().toISOString().slice(0,10);
+function exportCSV(){let csv="Fecha,Área,Alimento,Kg,Causa,Observación\n"+records.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(",")).join("\n");let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="EcoControl_Tacna_registros.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+renderAll();
+</script>
+</body>
+</html>
